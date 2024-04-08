@@ -1,0 +1,9 @@
+body {
+  margin: 0px;
+}
+
+canvas {
+  border: 2px solid black;
+  background-image: url(Japanese-background.gif);
+  background-size: cover;
+}
