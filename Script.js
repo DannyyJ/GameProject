@@ -26,19 +26,35 @@ let player = {
 
 // -------------------------------------
 // ------------ Player movement ------------
+let isAnimating = false;
+
 document.addEventListener("keydown", (e) => {
+  if (isAnimating) {
+    return; // Don't allow other actions if animation is ongoing
+  }
   switch (e.key) {
     case "a":
+      if (e.repeat) return;
       player.direction.Left = true;
+      spriteAnimation = yOffset;
       break;
     case "d":
+      if (e.repeat) return;
       player.direction.Right = true;
+      spriteAnimation = yOffset;
       break;
     case "w":
+      if (e.repeat) return;
       player.direction.Up = true;
       break;
     case "s":
+      if (e.repeat) return;
       player.direction.Down = true;
+      break;
+    case "f":
+      isAnimating = true;
+      spriteAnimation = 3 * yOffset;
+      disableMovement();
       break;
     default:
       break;
@@ -49,9 +65,11 @@ document.addEventListener("keyup", (e) => {
   switch (e.key) {
     case "a":
       player.direction.Left = false;
+      spriteAnimation = 0;
       break;
     case "d":
       player.direction.Right = false;
+      spriteAnimation = 0;
       break;
     case "w":
       player.direction.Up = false;
@@ -59,20 +77,40 @@ document.addEventListener("keyup", (e) => {
     case "s":
       player.direction.Down = false;
       break;
+    case "f":
+      isAnimating = false;
+      enableMovement();
+      spriteAnimation = 0;
+      break;
     default:
       break;
   }
 });
 
+function disableMovement() {
+  player.direction.Left = false;
+  player.direction.Right = false;
+  player.direction.Up = false;
+  player.direction.Down = false;
+}
+
+function enableMovement() {
+  disableMovement();
+}
+
 // Character sprite:
 let spriteSheet1 = new Image();
 spriteSheet1.src = "Samurai-sprite-transparant1.png";
-let spriteSheet1Width = spriteSheet1.width / 6.59;
+let spriteSheet1Width = spriteSheet1.width / 6.575;
 let spriteSheet1Heigth = spriteSheet1.height / 5.8;
 
-let frameIndex = 0;
+let frameIndex = 0.4;
+// let frameindexSword = 0.4;
+const yOffset = spriteSheet1.height / 5.4;
 const totalFrames = 6;
-const scale = 1.5;
+const totalFramesSword = 4;
+const scale = 1.25;
+const blankFrames = [4, 5];
 
 let lastTimestamp = 0,
   maxFPS = 15,
@@ -93,7 +131,10 @@ function draw(timestamp) {
   // Ritar den frame som är på frameIndex med skalan i scale
 
   // Se till att frameIndex inte blir högre än antalet frames. Börja om på frame 0 i så fall.
-  frameIndex = (frameIndex + 1) % totalFrames;
+  do {
+    frameIndex = (frameIndex + 1) % totalFrames;
+  } while (blankFrames.includes(Math.floor(frameIndex)));
+  // frameindexSword = (frameIndex + 1) % totalFramesSword;
   requestAnimationFrame(draw);
 }
 
@@ -108,6 +149,8 @@ spriteSheet1.onload = requestAnimationFrame(draw);
 // -------------------------------------
 // ------------ Animation ------------
 
+spriteAnimation = 0;
+
 function game() {
   requestAnimationFrame(game); // Run gameloop recursively
   c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Clear screen
@@ -120,7 +163,7 @@ function game() {
   c.drawImage(
     spriteSheet1,
     frameIndex * spriteSheet1Width, // Beräknar framens x-koordinat
-    0, // Framens y-koordinat är alltid 0
+    spriteAnimation, // 0, // 0, // Framens y-koordinat är alltid 0
     spriteSheet1Width,
     spriteSheet1Heigth,
     spriteX, // 0, // Ritar på x-koordinat 0 på canvas
