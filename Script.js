@@ -18,7 +18,9 @@ let player = {
   height: 200,
   direction: {
     Right: false,
+    FastRight: false,
     Left: false,
+    FastLeft: false,
     Up: false,
     Down: false,
   },
@@ -27,37 +29,61 @@ let player = {
 // -------------------------------------
 // ------------ Player movement ------------
 let isAnimating = false;
+let isJumping = false;
+let isMoving = false;
 
 document.addEventListener("keydown", (e) => {
   if (isAnimating) {
     return; // Don't allow other actions if animation is ongoing
   }
-  switch (e.key) {
-    case "a":
-      if (e.repeat) return;
-      player.direction.Left = true;
-      spriteAnimation = yOffset;
-      break;
-    case "d":
-      if (e.repeat) return;
-      player.direction.Right = true;
-      spriteAnimation = yOffset;
-      break;
-    case "w":
-      if (e.repeat) return;
-      player.direction.Up = true;
-      break;
-    case "s":
-      if (e.repeat) return;
-      player.direction.Down = true;
-      break;
-    case "f":
-      isAnimating = true;
-      spriteAnimation = 3 * yOffset;
-      disableMovement();
-      break;
-    default:
-      break;
+  if (e.shiftKey) {
+    // If Shift key is pressed, increase player's movement speed
+    switch (e.key) {
+      case "a":
+        if (e.repeat) return;
+        player.direction.Left = true;
+        player.direction.FastLeft = true;
+        spriteAnimation = 2 * yOffset;
+        break;
+      case "d":
+        if (e.repeat) return;
+        player.direction.Right = true;
+        player.direction.FastRight = true;
+        spriteAnimation = 2 * yOffset;
+        break;
+      default:
+        break;
+    }
+  } else {
+    switch (e.key) {
+      case "a":
+        if (e.repeat) return;
+        player.direction.Left = true;
+        spriteAnimation = yOffset;
+        break;
+      case "d":
+        if (e.repeat) return;
+        player.direction.Right = true;
+        spriteAnimation = yOffset;
+        break;
+      case "w":
+        player.direction.Up = true;
+        isJumping = true;
+        spriteAnimation = yOffset;
+        spriteSheet = spriteSheet2;
+        break;
+      case "s":
+        if (e.repeat) return;
+        player.direction.Down = true;
+        break;
+      case "f":
+        isAnimating = true;
+        spriteAnimation = 3 * yOffset;
+        disableMovement();
+        break;
+      default:
+        break;
+    }
   }
 });
 
@@ -66,10 +92,16 @@ document.addEventListener("keyup", (e) => {
     case "a":
       player.direction.Left = false;
       spriteAnimation = 0;
+      if (e.shiftKey) {
+        player.direction.FastLeft = false;
+      }
       break;
     case "d":
       player.direction.Right = false;
       spriteAnimation = 0;
+      if (e.shiftKey) {
+        player.direction.FastRight = false;
+      }
       break;
     case "w":
       player.direction.Up = false;
@@ -98,18 +130,34 @@ function enableMovement() {
   disableMovement();
 }
 
-// Character sprite:
+// Character sprites:
 let spriteSheet1 = new Image();
 spriteSheet1.src = "Samurai-sprite-transparant1.png";
 let spriteSheet1Width = spriteSheet1.width / 6.575;
 let spriteSheet1Heigth = spriteSheet1.height / 5.8;
+let widthDivider1 = 6.575;
+let heightDivider1 = 5.8;
+
+let spriteSheet2 = new Image();
+spriteSheet2.src = "Samurai-sprite-transparant2.png";
+let spriteSheet2Width = spriteSheet2.width / 6.575;
+let spriteSheet2Height = spriteSheet2.height / 5.8;
+let widthDivider2 = 6.2;
+let heightDivider2 = 5.4;
+
+// Gravity:
+const Gravity = 0.5;
+
+// Jumping för min character / spriten
+let jumping = false;
+// let jumpHeight = 150;
+// let jumpVelocity = -10;
 
 let frameIndex = 0.4;
 // let frameindexSword = 0.4;
 const yOffset = spriteSheet1.height / 5.4;
 const totalFrames = 6;
-const totalFramesSword = 4;
-const scale = 1.25;
+const scale = 1;
 const blankFrames = [4, 5];
 
 let lastTimestamp = 0,
@@ -128,59 +176,85 @@ function draw(timestamp) {
 
   c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Tömmer canvasen
 
+  frameIndex = (frameIndex + 1) % totalFrames;
   // Ritar den frame som är på frameIndex med skalan i scale
 
   // Se till att frameIndex inte blir högre än antalet frames. Börja om på frame 0 i så fall.
-  do {
-    frameIndex = (frameIndex + 1) % totalFrames;
-  } while (blankFrames.includes(Math.floor(frameIndex)));
   // frameindexSword = (frameIndex + 1) % totalFramesSword;
   requestAnimationFrame(draw);
 }
 
 spriteSheet1.onload = requestAnimationFrame(draw);
-// bild = document.createElement("img");
-// bild.src = "The rock.png";
-// bild.classList.add("image100x100");
-// playerImage.onload = () => {
-//   game();
-// };
 
 // -------------------------------------
 // ------------ Animation ------------
 
-spriteAnimation = 0;
+let spriteAnimation = 0;
+
+let spriteSheet = spriteSheet1;
+
+function drawPlayer(spriteSheet, heightDivider, widthDivider, frameIndex) {
+  do {
+    frameIndex = (frameIndex + 1) % totalFrames;
+  } while (blankFrames.includes(Math.floor(frameIndex)));
+
+  let spriteX = player.x;
+  let spriteY = player.y;
+
+  c.drawImage(
+    spriteSheet,
+    frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x-koordinat
+    spriteAnimation, // 0, // 0, // Framens y-koordinat är alltid 0
+    spriteSheet.width / widthDivider,
+    spriteSheet.height / heightDivider,
+    spriteX, // 0, // Ritar på x-koordinat 0 på canvas
+    spriteY, // 0, // Ritar på y-koordinat 0 på canvas
+    (spriteSheet.height / heightDivider) * scale,
+    (spriteSheet.width / widthDivider) * scale
+  );
+}
 
 function game() {
   requestAnimationFrame(game); // Run gameloop recursively
   c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Clear screen
 
-  let spriteX = player.x;
-  let spriteY = player.y;
+  drawPlayer(spriteSheet, heightDivider1, widthDivider1, frameIndex);
 
-  // c.fillRect(player.x, player.y, player.width, player.height); // Draw player
-  // c.fillstyle = "red";
-  c.drawImage(
-    spriteSheet1,
-    frameIndex * spriteSheet1Width, // Beräknar framens x-koordinat
-    spriteAnimation, // 0, // 0, // Framens y-koordinat är alltid 0
-    spriteSheet1Width,
-    spriteSheet1Heigth,
-    spriteX, // 0, // Ritar på x-koordinat 0 på canvas
-    spriteY, // 0, // Ritar på y-koordinat 0 på canvas
-    spriteSheet1Heigth * scale,
-    spriteSheet1Width * scale
-  );
+  //Hantera gravity och så att han inte faller genom marken
+  player.y += player.dy;
+  player.dy += Gravity;
 
   if (
+    player.direction.Right == true &&
+    player.direction.FastRight == true &&
+    player.x + player.width < gameCanvas.width
+  ) {
+    player.x += player.dx * 1.5;
+    isMoving = true;
+  } else if (
     player.direction.Right == true &&
     player.x + player.width < gameCanvas.width
   ) {
     player.x += player.dx;
+  } else if (
+    player.direction.Left == true &&
+    player.direction.FastLeft == true &&
+    player.x > 0
+  ) {
+    player.x -= player.dx * 1.5;
+    isMoving = true;
   } else if (player.direction.Left == true && player.x > 0) {
     player.x -= player.dx;
-  } else if (player.direction.Up == true && player.y > 0) {
-    player.y -= player.dy;
+  } else {
+    isMoving = false;
+  }
+  if (
+    player.direction.Up == true &&
+    player.y + player.height >= gameCanvas.height - 2
+  ) {
+    //Jump height
+    player.dy -= 10;
+    isJumping = true;
   } else if (
     player.direction.Down == true &&
     player.y + player.height < gameCanvas.height
@@ -188,11 +262,24 @@ function game() {
     player.y += player.dy;
   }
 
-  // c.beginPath();
-  // c.drawImage(playerImage, player.x, player.y, player.width, player.height);
-  // c.stroke();
+  if (player.y + player.height >= gameCanvas.height - 2) {
+    isJumping = false; // Player is no longer jumping
+  }
+  //En liten kollision manick som bestämmer vad som händer när träffar marken
+  if (player.y + player.height > gameCanvas.height) {
+    player.y = gameCanvas.height - player.height;
+    player.dy = 0;
+    isJumping = false;
+    isOnGround = true;
+  }
+
+  if (isJumping) {
+    spriteSheet = spriteSheet2;
+    spriteAnimation = 0;
+  }
 }
 
 // -------------------------------------
 // ------------ Start game ------------
 game();
+
