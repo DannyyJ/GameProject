@@ -15,8 +15,8 @@ body {
 .logo {
   width: 45%;
   border-radius: 40px;
-  margin: 80px 27.5%;
-  margin-bottom: 30px;
+  margin: 75px 27.5%;
+  margin-bottom: 0;
 }
 
 .buttons {
