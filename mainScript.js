@@ -5,4 +5,29 @@ let mainCanvas = document.getElementById("mainCanvas");
 mainCanvas.height = SCREENHEIGHT;
 mainCanvas.width=SCREENWIDTH;
 
-let start = document.getElementById(start)
+window.onload = function() {
+    const START_BTN = document.getElementById("STARTBTN");
+    const CHOOSE = document.getElementById("CHOOSE");
+    const BACK_BTN = document.getElementById("BACK");
+    const P1 = document.getElementById("P1");
+  
+    START_BTN.addEventListener("click", function(event) {
+      event.preventDefault(); // Förhindra standardbeteendet för länkar
+      CHOOSE.style.display = "block";
+      START_BTN.style.display = "none";
+    });
+  
+    BACK_BTN.addEventListener("click", function(event) {
+      event.preventDefault(); // Förhindra standardbeteendet för länkar
+      CHOOSE.style.display = "none";
+      P1.style.display = "none";
+      START_BTN.style.display = "block";
+    });
+  
+    document.getElementById("1P").addEventListener("click", function(event) {
+      event.preventDefault(); // Förhindra standardbeteendet för länkar
+      CHOOSE.style.display = "none";
+      P1.style.display = "block";
+    });
+  };
+  

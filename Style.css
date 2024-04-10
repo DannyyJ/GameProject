@@ -16,13 +16,14 @@ body {
   width: 45%;
   border-radius: 40px;
   margin: 80px 27.5%;
+  margin-bottom: 30px;
 }
 
 .buttons {
   list-style: none;
   padding: 0;
 }
-#button {
+.button {
   margin: 10px 40%;
   text-align: center;
   font-size: 50px;
@@ -38,4 +39,11 @@ a {
   text-decoration: none;
   color: black;
   text-align: center;
+}
+
+#CHOOSE {
+  display: none;
+}
+#P1 {
+  display: none;
 }
