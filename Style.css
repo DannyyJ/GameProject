@@ -10,36 +10,32 @@ body {
 #mainCanvas {
   background-image: url(background.gif);
   background-size: cover;
+  align-items: center;
 }
-
-/* .background-text {
-  position: absolute;
-} */
-
-/* h1 {
-  text-align: center;
-  margin-top: 40px;
-  background-color: whitesmoke;
-  padding: 10px;
-  margin-left: 42%;
-  margin-right: 42%;
-  border-radius: 30px;
-} */
 .logo {
-  width: 25%;
-  background-color: whitesmoke;
+  width: 45%;
   border-radius: 40px;
-  margin-left: 35%;
-  margin-right: 40%;
+  margin: 80px 27.5%;
 }
 
+.buttons {
+  list-style: none;
+  padding: 0;
+}
 #button {
-  margin-top: 250px;
-  margin-left: 40%;
-  margin-right: 40%;
+  margin: 10px 40%;
   text-align: center;
   font-size: 50px;
   padding: 10px;
   background-color: wheat;
   border-radius: 20px;
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  list-style: none;
+  text-decoration: none;
+  color: black;
+  text-align: center;
 }
