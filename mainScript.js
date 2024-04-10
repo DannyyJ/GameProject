@@ -5,3 +5,4 @@ let mainCanvas = document.getElementById("mainCanvas");
 mainCanvas.height = SCREENHEIGHT;
 mainCanvas.width=SCREENWIDTH;
 
+let start = document.getElementById(start)
