@@ -39,7 +39,6 @@ document.addEventListener("keydown", (e) => {
   if (isAnimating) {
     return; // Don't allow other actions if animation is ongoing
   }
-  console.log(player.dx);
   if (e.key === "Shift" && player.dx < player.speed * 2) {
     player.dx *= 2;
   }
@@ -47,6 +46,25 @@ document.addEventListener("keydown", (e) => {
   //   console.log("Håller ner shift och trycker", e.key);
   // If Shift key is pressed, increase player's movement speed
   // console.log(e.key);
+
+  // if (e.key === "a") {
+  //   player.direction.Left = true;
+  //   spriteAnimation = yOffset;
+  // } else if (e.key === "d") {
+  //   player.direction.Right = true;
+  //   spriteAnimation = yOffset;
+  // } else if (e.key === "w") {
+  //   player.direction.Up = true;
+  //   isJumping = true;
+  //   spriteSheet = spriteSheet2;
+  //   spriteAnimation = yOffset;
+  // } else if (e.key === "s") {
+  //   player.direction.Down = true;
+  // } else if (e.key === "f") {
+  //   isAnimating = true;
+  //   spriteAnimation = 3 * yOffset;
+  //   disableMovement();
+  // }
 
   switch (e.key) {
     case "a":
@@ -63,8 +81,6 @@ document.addEventListener("keydown", (e) => {
     case "w":
       player.direction.Up = true;
       isJumping = true;
-      spriteAnimation = yOffset;
-      spriteSheet = spriteSheet2;
       break;
     case "s":
       if (e.repeat) return;
@@ -97,6 +113,35 @@ document.addEventListener("keyup", (e) => {
   if (player.direction.Right == true) {
     spriteAnimation = yOffset;
   }
+
+  // if (e.key === "Shift") {
+  //   player.direction.Shift = false;
+  //   player.direction.FastLeft = false;
+  //   player.direction.FastRight = false;
+  //   player.direction.Right = false;
+  //   player.direction.Left = false;
+  //   spriteAnimation = 0;
+  //   player.dx = player.speed;
+  // }
+  // if (e.key === "a") {
+  //   player.direction.Left = false;
+  //   spriteAnimation = 0;
+  // } else if (e.key === "d") {
+  //   player.direction.Right = false;
+  //   spriteAnimation = 0;
+  // } else if (e.key === "w") {
+  //   player.direction.Up = false;
+  //   isJumping = false;
+  //   spriteSheet = spriteSheet1;
+  //   spriteAnimation = 0;
+  // } else if (e.key === "s") {
+  //   player.direction.Down = false;
+  // } else if (e.key === "f") {
+  //   isAnimating = false;
+  //   spriteAnimation = 0;
+  //   enableMovement();
+  // }
+
   switch (e.key) {
     case "Shift":
       player.direction.Shift = false;
@@ -106,7 +151,6 @@ document.addEventListener("keyup", (e) => {
       player.direction.Left = false;
       spriteAnimation = 0;
       player.dx = player.speed;
-      break;
     case "a":
       player.direction.Left = false;
       spriteAnimation = 0;
@@ -117,6 +161,9 @@ document.addEventListener("keyup", (e) => {
       break;
     case "w":
       player.direction.Up = false;
+      isJumping = false;
+      spriteSheet = spriteSheet1;
+      spriteAnimation = 0;
       break;
     case "s":
       player.direction.Down = false;
@@ -230,6 +277,10 @@ function drawPlayer(spriteSheet, heightDivider, widthDivider, frameIndex) {
   );
 }
 function updatePlayerPosition() {
+  if (player.y < 358) {
+    spriteSheet = spriteSheet2;
+    console.log(spriteAnimation);
+  }
   if (player.direction.Right && player.dx > player.speed) {
     spriteAnimation = 2 * yOffset;
   }
@@ -246,19 +297,15 @@ function updatePlayerPosition() {
   ) {
     player.x += player.dx * 3;
     isMoving = true;
-  } else if (
-    player.direction.Right &&
-    player.x + player.width < gameCanvas.width
-  ) {
+  }
+  if (player.direction.Right && player.x + player.width < gameCanvas.width) {
     player.x += player.dx;
-  } else if (
-    player.direction.Left &&
-    player.direction.FastLeft &&
-    player.x > 0
-  ) {
+  }
+  if (player.direction.Left && player.direction.FastLeft && player.x > 0) {
     player.x -= player.dx * 3;
     isMoving = true;
-  } else if (player.direction.Left && player.x > 0) {
+  }
+  if (player.direction.Left && player.x > 0) {
     player.x -= player.dx;
   } else {
     isMoving = false;
@@ -309,3 +356,4 @@ function game() {
 // -------------------------------------
 // ------------ Start game ------------
 game();
+
