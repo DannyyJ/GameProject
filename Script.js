@@ -81,6 +81,7 @@ document.addEventListener("keydown", (e) => {
     case "w":
       player.direction.Up = true;
       isJumping = true;
+      isOnGround = false;
       break;
     case "s":
       if (e.repeat) return;
@@ -107,13 +108,6 @@ document.addEventListener("keyup", (e) => {
   if (e.key === "Shift" && player.dx > player.speed) {
     player.dx /= 2;
   }
-  if (player.direction.Left == true) {
-    spriteAnimation = yOffset;
-  }
-  if (player.direction.Right == true) {
-    spriteAnimation = yOffset;
-  }
-
   // if (e.key === "Shift") {
   //   player.direction.Shift = false;
   //   player.direction.FastLeft = false;
@@ -264,6 +258,7 @@ function drawPlayer(spriteSheet, heightDivider, widthDivider, frameIndex) {
   let spriteX = player.x;
   let spriteY = player.y;
 
+  console.log(spriteSheet);
   c.drawImage(
     spriteSheet,
     frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x-koordinat
@@ -277,9 +272,13 @@ function drawPlayer(spriteSheet, heightDivider, widthDivider, frameIndex) {
   );
 }
 function updatePlayerPosition() {
-  if (player.y < 358) {
+  if (player.dx <= player.speed) {
+    spriteSheet = spriteSheet1;
+  }
+
+  if (isJumping) {
     spriteSheet = spriteSheet2;
-    console.log(spriteAnimation);
+    spriteAnimation = yOffset;
   }
   if (player.direction.Right && player.dx > player.speed) {
     spriteAnimation = 2 * yOffset;
@@ -288,9 +287,7 @@ function updatePlayerPosition() {
     spriteSheet = spriteSheet2;
     spriteAnimation = yOffset;
   }
-  if (player.dx <= player.speed) {
-    spriteSheet = spriteSheet1;
-  }
+
   if (
     player.direction.FastRight &&
     player.x + player.width < gameCanvas.width
@@ -346,10 +343,6 @@ function game() {
     isOnGround = true;
   }
 
-  if (isJumping) {
-    spriteSheet = spriteSheet2;
-    spriteAnimation = 0;
-  }
   updatePlayerPosition();
 }
 
