@@ -2,7 +2,7 @@ body {
   margin: 0px;
 }
 
-#gameCanvas {
+canvas {
   background-image: url(Japanese-background.gif);
   background-size: cover;
 }
