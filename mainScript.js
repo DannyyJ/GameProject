@@ -4,6 +4,7 @@ const SCREENHEIGHT = innerHeight;
 let mainCanvas = document.getElementById("mainCanvas");
 mainCanvas.height = SCREENHEIGHT;
 mainCanvas.width=SCREENWIDTH;
+let gameCanvas = document.getElementById("gameCanvas")
 
 window.onload = function() {
     const START_BTN = document.getElementById("STARTBTN");
@@ -30,4 +31,7 @@ window.onload = function() {
       P1.style.display = "block";
     });
   };
-  
+const hardbutton = document.getElementById("HARD");
+hardbutton.addEventListener("click", function(){
+  gameCanvas.style.backgroundImage = 'url("dojo.git")';
+})

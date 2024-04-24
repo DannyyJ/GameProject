@@ -6,12 +6,12 @@ canvas {
   background-image: url(Japanese-background.gif);
   background-size: cover;
 }
-
 #mainCanvas {
   background-image: url(background.gif);
   background-size: cover;
   align-items: center;
 }
+
 .logo {
   width: 45%;
   border-radius: 40px;
