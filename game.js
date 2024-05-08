@@ -9,13 +9,35 @@ gameCanvas.width = SCREENWIDTH;
 // -------------------------------------
 // Player variables
 let player = {
+  hp: 100,
   x: 200,
   y: 200,
   dx: 3,
   dy: 3,
   speed: 3,
   radius: 20,
-  width: 200,
+  width: 30,
+  height: 200,
+  direction: {
+    Right: false,
+    FastRight: false,
+    Left: false,
+    FastLeft: false,
+    Up: false,
+    Down: false,
+    Shift: false,
+  },
+};
+
+let newPlayer = {
+  hp: 100,
+  x: 900,
+  y: 200,
+  dx: 3,
+  dy: 3,
+  speed: 3,
+  radius: 20,
+  width: 30,
   height: 200,
   direction: {
     Right: false,
@@ -31,66 +53,95 @@ let player = {
 // -------------------------------------
 // ------------ Player movement ------------
 let isAnimating = false;
+let newIsAnimating = false;
 let isJumping = false;
 let isMoving = false;
+
+//Alla "new" konstander tillhåller player 2
 
 document.addEventListener("keydown", (e) => {
   // console.log("trycker ner", e.key);
   if (isAnimating) {
     return; // Don't allow other actions if animation is ongoing
   }
+  if (newIsAnimating) {
+    return; // Don't allow other actions if animation is ongoing
+  }
   if (e.key === "Shift" && player.dx < player.speed * 2) {
     player.dx *= 2;
   }
-  // if (player.direction.Shift == true) {
-  //   console.log("Håller ner shift och trycker", e.key);
-  // If Shift key is pressed, increase player's movement speed
-  // console.log(e.key);
-
-  // if (e.key === "a") {
-  //   player.direction.Left = true;
-  //   spriteAnimation = yOffset;
-  // } else if (e.key === "d") {
-  //   player.direction.Right = true;
-  //   spriteAnimation = yOffset;
-  // } else if (e.key === "w") {
-  //   player.direction.Up = true;
-  //   isJumping = true;
-  //   spriteSheet = spriteSheet2;
-  //   spriteAnimation = yOffset;
-  // } else if (e.key === "s") {
-  //   player.direction.Down = true;
-  // } else if (e.key === "f") {
-  //   isAnimating = true;
-  //   spriteAnimation = 3 * yOffset;
-  //   disableMovement();
-  // }
-
+  if (e.key === "b" && newPlayer.dx < newPlayer.speed * 2) {
+    newPlayer.dx *= 2;
+  }
   switch (e.key) {
+    case "A":
     case "a":
       if (e.repeat) return;
       player.direction.Left = true;
       spriteAnimation = yOffset;
       break;
+    case "D":
     case "d":
       // console.log("Fastright is first:", player.direction.FastRight);
       if (e.repeat) return;
       player.direction.Right = true;
       spriteAnimation = yOffset;
       break;
+    case "W":
     case "w":
       player.direction.Up = true;
       isJumping = true;
       isOnGround = false;
       break;
+    case "S":
     case "s":
       if (e.repeat) return;
       player.direction.Down = true;
       break;
+    case "F":
     case "f":
+      if (checkCollision(player, newPlayer)) {
+        newPlayer.hp -= 20;
+        console.log(newPlayer.hp);
+      }
       isAnimating = true;
       spriteAnimation = 3 * yOffset;
-      disableMovement();
+      disableMovement1();
+      break;
+    //player 2 movement:
+    case "J":
+    case "j":
+      if (e.repeat) return;
+      newPlayer.direction.Left = true;
+      newSpriteAnimation = yOffset;
+      break;
+    case "L":
+    case "l":
+      // console.log("Fastright is first:", player.direction.FastRight);
+      if (e.repeat) return;
+      newPlayer.direction.Right = true;
+      newSpriteAnimation = yOffset;
+      break;
+    case "I":
+    case "i":
+      newPlayer.direction.Up = true;
+      isJumping = true;
+      isOnGround = false;
+      break;
+    case "K":
+    case "k":
+      if (e.repeat) return;
+      newPlayer.direction.Down = true;
+      break;
+    case "H":
+    case "h":
+      if (checkCollision(newPlayer, player)) {
+        player.hp -= 20;
+        console.log(player.hp);
+      }
+      newIsAnimating = true;
+      newSpriteAnimation = 3 * yOffset;
+      disableMovement2();
       break;
     default:
       break;
@@ -98,44 +149,15 @@ document.addEventListener("keydown", (e) => {
 });
 
 document.addEventListener("keyup", (e) => {
-  // if (e.key == "Shift") {
-  //   player.direction.Shift = false;
-  // }
-
-  // if (player.direction.Shift == true) {
-  //   disableMovement();
-  // }
   if (e.key === "Shift" && player.dx > player.speed) {
     player.dx /= 2;
   }
-  // if (e.key === "Shift") {
-  //   player.direction.Shift = false;
-  //   player.direction.FastLeft = false;
-  //   player.direction.FastRight = false;
-  //   player.direction.Right = false;
-  //   player.direction.Left = false;
-  //   spriteAnimation = 0;
-  //   player.dx = player.speed;
-  // }
-  // if (e.key === "a") {
-  //   player.direction.Left = false;
-  //   spriteAnimation = 0;
-  // } else if (e.key === "d") {
-  //   player.direction.Right = false;
-  //   spriteAnimation = 0;
-  // } else if (e.key === "w") {
-  //   player.direction.Up = false;
-  //   isJumping = false;
-  //   spriteSheet = spriteSheet1;
-  //   spriteAnimation = 0;
-  // } else if (e.key === "s") {
-  //   player.direction.Down = false;
-  // } else if (e.key === "f") {
-  //   isAnimating = false;
-  //   spriteAnimation = 0;
-  //   enableMovement();
-  // }
 
+  if (e.key === "b" && newPlayer.dx > newPlayer.speed) {
+    newPlayer.dx /= 2;
+  }
+
+  console.log(e.key);
   switch (e.key) {
     case "Shift":
       player.direction.Shift = false;
@@ -145,34 +167,79 @@ document.addEventListener("keyup", (e) => {
       player.direction.Left = false;
       spriteAnimation = 0;
       player.dx = player.speed;
+      console.log("shift");
+      break;
+    case "B":
+    case "b":
+      newPlayer.direction.Shift = false;
+      newPlayer.direction.FastLeft = false;
+      newPlayer.direction.FastRight = false;
+      newPlayer.direction.Right = false;
+      newPlayer.direction.Left = false;
+      newSpriteAnimation = 0;
+      newPlayer.dx = newPlayer.speed;
+      console.log("b");
+    case "A":
     case "a":
       player.direction.Left = false;
       spriteAnimation = 0;
       break;
+    case "D":
     case "d":
       player.direction.Right = false;
       spriteAnimation = 0;
       break;
+    case "W":
     case "w":
       player.direction.Up = false;
       isJumping = false;
       spriteSheet = spriteSheet1;
       spriteAnimation = 0;
       break;
+    case "S":
     case "s":
       player.direction.Down = false;
       break;
+    case "F":
     case "f":
       isAnimating = false;
-      enableMovement();
+      enableMovement1();
       spriteAnimation = 0;
+      break;
+    case "J":
+    case "j":
+      console.log("hej");
+      newPlayer.direction.Left = false;
+      newSpriteAnimation = 0;
+      break;
+    case "L":
+    case "l":
+      newPlayer.direction.Right = false;
+      newSpriteAnimation = 0;
+      break;
+    case "I":
+    case "i":
+      newPlayer.direction.Up = false;
+      isJumping = false;
+      newSpriteSheet = redSpriteSheet1;
+      newSpriteAnimation = 0;
+      break;
+    case "K":
+    case "k":
+      newPlayer.direction.Down = false;
+      break;
+    case "H":
+    case "h":
+      newIsAnimating = false;
+      enableMovement2();
+      newSpriteAnimation = 0;
       break;
     default:
       break;
   }
 });
 
-function disableMovement() {
+function disableMovement1() {
   if (!player.direction.Shift) {
     player.direction.Left = false;
     player.direction.FastLeft = false;
@@ -183,30 +250,55 @@ function disableMovement() {
   player.direction.Down = false;
 }
 
-function enableMovement() {
-  disableMovement();
+function disableMovement2() {
+  if (!newPlayer.direction.Shift) {
+    newPlayer.direction.Left = false;
+    newPlayer.direction.FastLeft = false;
+    newPlayer.direction.Right = false;
+    newPlayer.direction.FastRight = false;
+  }
+  newPlayer.direction.Up = false;
+  newPlayer.direction.Down = false;
+}
+
+function enableMovement1() {
+  disableMovement1();
+}
+
+function enableMovement2() {
+  disableMovement2();
 }
 
 // Character sprites:
 let spriteSheet1 = new Image();
-spriteSheet1.src = "Samurai-sprite-transparant1.png";
+spriteSheet1.src = "Images/Samurai-sprite-transparant1.png";
 let spriteSheet1Width = spriteSheet1.width / 6.575;
 let spriteSheet1Heigth = spriteSheet1.height / 5.8;
 let widthDivider1 = 6.575;
 let heightDivider1 = 5.8;
 
 let spriteSheet2 = new Image();
-spriteSheet2.src = "Samurai-sprite-transparant2.png";
+spriteSheet2.src = "Images/Samurai-sprite-transparant2.png";
 let spriteSheet2Width = spriteSheet2.width / 6.575;
 let spriteSheet2Height = spriteSheet2.height / 5.8;
 let widthDivider2 = 6.2;
 let heightDivider2 = 5.4;
 
+let redSpriteSheet1 = new Image();
+redSpriteSheet1.src = "Images/Samurai-sprite-transparant1 red.png";
+let redSpriteSheet1Width = redSpriteSheet1.width / 6.575;
+let redSpriteSheet1Height = spriteSheet1.height / 5.8;
+
+let redSpriteSheet2 = new Image();
+redSpriteSheet2.src = "Images/Samurai-sprite-transparant2 red.png";
+let redSpriteSheet2Width = redSpriteSheet2.width / 6.575;
+let redSpriteSheet2Height = spriteSheet2.height / 5.8;
+
 // Gravity:
 const Gravity = 0.5;
 
 // Jumping för min character / spriten
-let jumping = false;
+let jumping = true;
 // let jumpHeight = 150;
 // let jumpVelocity = -10;
 
@@ -214,6 +306,7 @@ let frameIndex = 0.4;
 // let frameindexSword = 0.4;
 const yOffset = spriteSheet1.height / 5.4;
 const totalFrames = 6;
+const totalFramesHealth = 2;
 const scale = 1;
 const blankFrames = [4, 5];
 
@@ -248,29 +341,83 @@ spriteSheet1.onload = requestAnimationFrame(draw);
 
 let spriteAnimation = 0;
 
+let newSpriteAnimation = 0;
+
 let spriteSheet = spriteSheet1;
 
-function drawPlayer(spriteSheet, heightDivider, widthDivider, frameIndex) {
+let newSpriteSheet = redSpriteSheet1;
+
+function drawPlayer1(
+  spriteSheet,
+  heightDivider,
+  widthDivider,
+  frameIndex,
+  spriteAnimation
+) {
   do {
     frameIndex = (frameIndex + 1) % totalFrames;
   } while (blankFrames.includes(Math.floor(frameIndex)));
 
-  let spriteX = player.x;
-  let spriteY = player.y;
+  let spriteX1 = player.x;
+  let spriteY1 = player.y;
 
-  console.log(spriteSheet);
   c.drawImage(
     spriteSheet,
     frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x-koordinat
     spriteAnimation, // 0, // 0, // Framens y-koordinat är alltid 0
     spriteSheet.width / widthDivider,
     spriteSheet.height / heightDivider,
-    spriteX, // 0, // Ritar på x-koordinat 0 på canvas
-    spriteY, // 0, // Ritar på y-koordinat 0 på canvas
+    spriteX1, // 0, // Ritar på x-koordinat 0 på canvas
+    spriteY1, // 0, // Ritar på y-koordinat 0 på canvas
     (spriteSheet.height / heightDivider) * scale,
     (spriteSheet.width / widthDivider) * scale
   );
 }
+
+function drawPlayer2(
+  newSpriteSheet,
+  heightDivider,
+  widthDivider,
+  frameIndex,
+  spriteAnimation
+) {
+  do {
+    frameIndex = (frameIndex + 1) % totalFrames;
+  } while (blankFrames.includes(Math.floor(frameIndex)));
+
+  let spriteX2 = newPlayer.x;
+  let spriteY2 = newPlayer.y;
+
+  c.save();
+  c.scale(-1, 1); //här flippar vi enemy sprite horizontally
+
+  let flippedX = -spriteX2 - (spriteSheet.width / widthDivider) * scale;
+
+  c.drawImage(
+    newSpriteSheet,
+    frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x-koordinat
+    spriteAnimation, // 0, // 0, // Framens y-koordinat är alltid 0
+    spriteSheet.width / widthDivider,
+    spriteSheet.height / heightDivider,
+    flippedX, // 0, // Ritar på x-koordinat 0 på canvas
+    spriteY2, // 0, // Ritar på y-koordinat 0 på canvas
+    (spriteSheet.height / heightDivider) * scale,
+    (spriteSheet.width / widthDivider) * scale
+  );
+  c.restore();
+}
+
+//Kolla ifall spelare är i spelare
+function checkCollision(rect1, rect2) {
+  return (
+    rect1.x < rect2.x + rect2.width &&
+    rect1.x + rect1.width > rect2.x &&
+    rect1.y < rect2.y + rect2.height &&
+    rect1.y + rect1.height > rect2.y
+  );
+}
+
+//Funktion för att player rör sig
 function updatePlayerPosition() {
   if (player.dx <= player.speed) {
     spriteSheet = spriteSheet1;
@@ -280,6 +427,7 @@ function updatePlayerPosition() {
     spriteSheet = spriteSheet2;
     spriteAnimation = yOffset;
   }
+  //Player 1
   if (player.direction.Right && player.dx > player.speed) {
     spriteAnimation = 2 * yOffset;
   }
@@ -320,17 +468,86 @@ function updatePlayerPosition() {
   ) {
     player.y += player.dy;
   }
+  //Player 2
+  if (newPlayer.dx <= newPlayer.speed) {
+    newSpriteSheet = redSpriteSheet1;
+  }
+
+  if (newPlayer.direction.Right && newPlayer.dx > player.speed) {
+    newSpriteSheet = redSpriteSheet2;
+    newSpriteAnimation = yOffset;
+  }
+  if (newPlayer.direction.Left && newPlayer.dx > player.speed) {
+    newSpriteAnimation = 2 * yOffset;
+  }
+
+  if (
+    newPlayer.direction.FastRight &&
+    newPlayer.x + newPlayer.width < gameCanvas.width
+  ) {
+    newPlayer.x += newPlayer.dx * 3;
+    isMoving = true;
+  }
+  if (
+    newPlayer.direction.Right &&
+    newPlayer.x + newPlayer.width < gameCanvas.width
+  ) {
+    newPlayer.x += newPlayer.dx;
+  }
+  if (
+    newPlayer.direction.Left &&
+    newPlayer.direction.FastLeft &&
+    newPlayer.x > 0
+  ) {
+    newPlayer.x -= newPlayer.dx * 3;
+    isMoving = true;
+  }
+  if (newPlayer.direction.Left && newPlayer.x > 0) {
+    newPlayer.x -= newPlayer.dx;
+  } else {
+    isMoving = false;
+  }
+
+  if (
+    newPlayer.direction.Up &&
+    newPlayer.y + newPlayer.height >= gameCanvas.height - 2
+  ) {
+    newPlayer.dy -= 10; // Jump height
+    isJumping = true;
+  } else if (
+    newPlayer.direction.Down &&
+    newPlayer.y + newPlayer.height < gameCanvas.height
+  ) {
+    newPlayer.y += newPlayer.dy;
+  }
 }
 
 function game() {
   requestAnimationFrame(game); // Run gameloop recursively
   c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Clear screen
 
-  drawPlayer(spriteSheet, heightDivider1, widthDivider1, frameIndex);
+  drawPlayer1(
+    spriteSheet,
+    heightDivider1,
+    widthDivider1,
+    frameIndex,
+    spriteAnimation
+  );
+
+  drawPlayer2(
+    newSpriteSheet,
+    heightDivider1,
+    widthDivider1,
+    frameIndex,
+    newSpriteAnimation
+  );
 
   //Hantera gravity och så att han inte faller genom marken
   player.y += player.dy;
   player.dy += Gravity;
+
+  newPlayer.y += newPlayer.dy;
+  newPlayer.dy += Gravity;
 
   if (player.y + player.height >= gameCanvas.height - 2) {
     isJumping = false; // Player is no longer jumping
@@ -343,9 +560,17 @@ function game() {
     isOnGround = true;
   }
 
+  if (newPlayer.y + newPlayer.height > gameCanvas.height) {
+    newPlayer.y = gameCanvas.height - newPlayer.height;
+    newPlayer.dy = 0;
+    isJumping = false;
+    isOnGround = true;
+  }
+
   updatePlayerPosition();
 }
 
 // -------------------------------------
 // ------------ Start game ------------
 game();
+
