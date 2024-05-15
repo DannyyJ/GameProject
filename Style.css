@@ -3,8 +3,40 @@ body {
 }
 
 canvas {
-  background-image: url(Japanese-background.gif);
+  background-image: url(Images/Japanese-background.gif);
   background-size: cover;
+}
+
+#gameCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#conditionalTextContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#conditionalText {
+  font-size: 100px;
+  z-index: 10;
+  color: red;
+  text-shadow: 6px 5px rgba(0, 0, 0, 0.4);
+}
+
+.hidden {
+  display: none;
+}
+.visible {
+  display: block;
+  /* Add any additional styling here */
+}
+
 }
 #mainCanvas {
   background-image: url(background.gif);
