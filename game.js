@@ -568,9 +568,18 @@ function game() {
   }
 
   updatePlayerPosition();
+
+  if (player.hp <= 0 || newPlayer.hp <= 0) {
+    document.getElementById("conditionalText").classList.remove("hidden");
+    document.getElementById("conditionalText").classList.add("visible");
+    console.log("död");
+  } else {
+    document.getElementById("conditionalText").classList.remove("visible");
+    document.getElementById("conditionalText").classList.add("hidden");
+    console.log("lever");
+  }
 }
 
 // -------------------------------------
 // ------------ Start game ------------
 game();
-
