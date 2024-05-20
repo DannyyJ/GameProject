@@ -7,6 +7,19 @@ let c = gameCanvas.getContext("2d"); // Drawing object
 gameCanvas.height = SCREENHEIGHT;
 gameCanvas.width = SCREENWIDTH;
 // -------------------------------------
+let audioElement = document.getElementById("audioElement");
+
+audioElement.autoplay = true;
+audioElement.volume = 0; // Sätt volymen till 0 för att tyst spela ljudet
+audioElement.pause();
+function toggleAudio() {
+  if (audioElement.paused) {
+    audioElement.play();
+  } else {
+    audioElement.currentTime = 0;
+  }
+}
+
 // Player variables
 let player = {
   hp: 100,
@@ -573,6 +586,7 @@ function game() {
     document.getElementById("conditionalText").classList.remove("hidden");
     document.getElementById("conditionalText").classList.add("visible");
     console.log("död");
+    toggleAudio();
   } else {
     document.getElementById("conditionalText").classList.remove("visible");
     document.getElementById("conditionalText").classList.add("hidden");
