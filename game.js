@@ -285,17 +285,29 @@ function enableMovement2() {
 // Character sprites:
 let spriteSheet1 = new Image();
 spriteSheet1.src = "Images/Samurai-sprite-transparant1.png";
-let spriteSheet1Width = spriteSheet1.width / 6.575;
-let spriteSheet1Heigth = spriteSheet1.height / 5.8;
 let widthDivider1 = 6.575;
 let heightDivider1 = 5.8;
+spriteSheet1.onload = function () {
+  let spriteSheet1Width = spriteSheet1.width / 6.575;
+  let spriteSheet1Height = spriteSheet1.height / 5.8;
+  console.log("SpriteSheet1 Width: ", spriteSheet1.width);
+  console.log("SpriteSheet1 Height: ", spriteSheet1.height);
+  console.log("Calculated SpriteSheet1 Width: ", spriteSheet1Width);
+  console.log("Calculated SpriteSheet1 Height: ", spriteSheet1Height);
+};
 
 let spriteSheet2 = new Image();
 spriteSheet2.src = "Images/Samurai-sprite-transparant2.png";
-let spriteSheet2Width = spriteSheet2.width / 6.575;
-let spriteSheet2Height = spriteSheet2.height / 5.8;
 let widthDivider2 = 6.2;
 let heightDivider2 = 5.4;
+spriteSheet2.onload = function () {
+  let spriteSheet2Width = spriteSheet2.width / 6.575;
+  let spriteSheet2Height = spriteSheet2.height / 5.8;
+  console.log("SpriteSheet2 Width: ", spriteSheet2.width);
+  console.log("SpriteSheet2 Height: ", spriteSheet2.height);
+  console.log("Calculated SpriteSheet2 Width: ", spriteSheet2Width);
+  console.log("Calculated SpriteSheet2 Height: ", spriteSheet2Height);
+};
 
 let redSpriteSheet1 = new Image();
 redSpriteSheet1.src = "Images/Samurai-sprite-transparant1 red.png";
@@ -306,6 +318,8 @@ let redSpriteSheet2 = new Image();
 redSpriteSheet2.src = "Images/Samurai-sprite-transparant2 red.png";
 let redSpriteSheet2Width = redSpriteSheet2.width / 6.575;
 let redSpriteSheet2Height = spriteSheet2.height / 5.8;
+
+console.log(spriteSheet1.height);
 
 // Gravity:
 const Gravity = 0.5;
