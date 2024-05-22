@@ -12,6 +12,7 @@ let audioElement = document.getElementById("audioElement");
 audioElement.autoplay = true;
 audioElement.volume = 0; // Sätt volymen till 0 för att tyst spela ljudet
 audioElement.pause();
+
 function toggleAudio() {
   if (audioElement.paused) {
     audioElement.play();
@@ -21,47 +22,32 @@ function toggleAudio() {
 }
 
 // Player variables
-let player = {
-  hp: 100,
-  x: 200,
-  y: 200,
-  dx: 3,
-  dy: 3,
-  speed: 3,
-  radius: 20,
-  width: 30,
-  height: 200,
-  direction: {
-    Right: false,
-    FastRight: false,
-    Left: false,
-    FastLeft: false,
-    Up: false,
-    Down: false,
-    Shift: false,
-  },
-};
+class Player {
+  constructor(hp, x, y, dx, dy, speed, radius, width, height) {
+    this.hp = hp;
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.speed = speed;
+    this.radius = radius;
+    this.width = width;
+    this.height = height;
+    this.direction = {
+      Right: false,
+      FastRight: false,
+      Left: false,
+      FastLeft: false,
+      Up: false,
+      Down: false,
+      Shift: false,
+    };
+  }
+}
 
-let newPlayer = {
-  hp: 100,
-  x: 900,
-  y: 200,
-  dx: 3,
-  dy: 3,
-  speed: 3,
-  radius: 20,
-  width: 30,
-  height: 200,
-  direction: {
-    Right: false,
-    FastRight: false,
-    Left: false,
-    FastLeft: false,
-    Up: false,
-    Down: false,
-    Shift: false,
-  },
-};
+// Så här fungerar detta:
+let player = new Player(100, 200, 200, 3, 3, 3, 20, 30, 200);
+let newPlayer = new Player(100, 900, 200, 3, 3, 3, 20, 30, 200);
 
 // -------------------------------------
 // ------------ Player movement ------------
@@ -73,7 +59,7 @@ let isMoving = false;
 //Alla "new" konstander tillhåller player 2
 
 document.addEventListener("keydown", (e) => {
-  // console.log("trycker ner", e.key);
+  // conle.log("trycker ner", e.key);
   if (isAnimating) {
     return; // Don't allow other actions if animation is ongoing
   }
@@ -596,18 +582,30 @@ function game() {
 
   updatePlayerPosition();
 
-  if (player.hp <= 0 || newPlayer.hp <= 0) {
-    document.getElementById("conditionalText").classList.remove("hidden");
-    document.getElementById("conditionalText").classList.add("visible");
+  if (newPlayer.hp <= 0) {
+    document.getElementById("conditionalText1").classList.remove("hidden");
+    document.getElementById("conditionalText1").classList.add("visible");
     console.log("död");
     toggleAudio();
   } else {
-    document.getElementById("conditionalText").classList.remove("visible");
-    document.getElementById("conditionalText").classList.add("hidden");
+    document.getElementById("conditionalText1").classList.remove("visible");
+    document.getElementById("conditionalText1").classList.add("hidden");
+    console.log("lever");
+  }
+  if (player.hp <= 0) {
+    document.getElementById("conditionalText2").classList.remove("hidden");
+    document.getElementById("conditionalText2").classList.add("visible");
+    console.log("död");
+    toggleAudio();
+  } else {
+    document.getElementById("conditionalText2").classList.remove("visible");
+    document.getElementById("conditionalText2").classList.add("hidden");
     console.log("lever");
   }
 }
 
 // -------------------------------------
 // ------------ Start game ------------
+
+gameCanvas.style.backgroundImage = window.sessionStorage.getItem("background");
 game();
