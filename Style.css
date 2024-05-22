@@ -15,6 +15,24 @@ canvas {
   height: 100%;
 }
 
+#player1Display {
+  font-size: 40px;
+  top: 10px;
+  left: 10px;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+}
+
+#player2Display {
+  font-size: 40px;
+  top: 10px;
+  right: 10px;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+}
+
 #conditionalTextContainer {
   position: absolute;
   top: 50%;
@@ -45,7 +63,7 @@ canvas {
 }
 
 #mainCanvas {
-  background-image: url(background.gif);
+  background-image: url(Images/background.gif);
   background-size: cover;
   align-items: center;
 }
