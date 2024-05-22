@@ -4,6 +4,7 @@ const SCREENHEIGHT = innerHeight;
 let mainCanvas = document.getElementById("mainCanvas");
 mainCanvas.height = SCREENHEIGHT;
 mainCanvas.width = SCREENWIDTH;
+window.sessionStorage.clear()
 let gameCanvas = document.getElementById("gameCanvas");
 
 window.onload = function () {
