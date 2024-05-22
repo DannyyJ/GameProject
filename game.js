@@ -49,6 +49,27 @@ class Player {
 let player = new Player(100, 200, 200, 3, 3, 3, 20, 30, 200);
 let newPlayer = new Player(100, 900, 200, 3, 3, 3, 20, 30, 200);
 
+function displayPlayer1HP() {
+  // Get the container element
+  const player1Display = document.getElementById("player1Display");
+
+  // Create a text node with the player 1 HP
+  const player1Text = `Player 1: ${player.hp}Hp`;
+
+  // Set the text content of the container element
+  player1Display.textContent = player1Text;
+}
+function displayPlayer2HP() {
+  // Get the container element
+  const player2Display = document.getElementById("player2Display");
+
+  // Create a text node with the player 1 HP
+  const player2Text = `Player 2: ${newPlayer.hp}Hp`;
+
+  // Set the text content of the container element
+  player2Display.textContent = player2Text;
+}
+
 // -------------------------------------
 // ------------ Player movement ------------
 let isAnimating = false;
@@ -581,6 +602,9 @@ function game() {
   }
 
   updatePlayerPosition();
+
+  displayPlayer1HP();
+  displayPlayer2HP();
 
   if (newPlayer.hp <= 0) {
     document.getElementById("conditionalText1").classList.remove("hidden");
