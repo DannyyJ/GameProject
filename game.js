@@ -46,28 +46,32 @@ class Player {
 }
 
 // Så här fungerar detta:
+//Player(liv, vart spelaren är horizontellt, vertikalt, hastigheten horizontellt, vertikalt, speed variabel,
+// radius på spriten, bredden, höjden)
 let player = new Player(100, 200, 200, 3, 3, 3, 20, 30, 200);
 let newPlayer = new Player(100, 900, 200, 3, 3, 3, 20, 30, 200);
 
+//Hp för player 1
 function displayPlayer1HP() {
-  // Get the container element
   const player1Display = document.getElementById("player1Display");
 
-  // Create a text node with the player 1 HP
-  const player1Text = `Player 1: ${player.hp}Hp`;
+  const player1Text = `${player.hp}Hp`;
 
-  // Set the text content of the container element
   player1Display.textContent = player1Text;
+
+  player1Display.style.left = `${player.x + 60}px`;
+  player1Display.style.top = `${player.y - player.height / 2 + 130}px`;
 }
+//Hp för player 2
 function displayPlayer2HP() {
-  // Get the container element
   const player2Display = document.getElementById("player2Display");
 
-  // Create a text node with the player 1 HP
-  const player2Text = `Player 2: ${newPlayer.hp}Hp`;
+  const player2Text = `${newPlayer.hp}Hp`;
 
-  // Set the text content of the container element
   player2Display.textContent = player2Text;
+
+  player2Display.style.left = `${newPlayer.x + 120}px`;
+  player2Display.style.top = `${newPlayer.y - newPlayer.height / 2 + 130}px`;
 }
 
 // -------------------------------------
@@ -80,12 +84,11 @@ let isMoving = false;
 //Alla "new" konstander tillhåller player 2
 
 document.addEventListener("keydown", (e) => {
-  // conle.log("trycker ner", e.key);
   if (isAnimating) {
-    return; // Don't allow other actions if animation is ongoing
+    return; // Om animation håller på, låt inte player göra något
   }
   if (newIsAnimating) {
-    return; // Don't allow other actions if animation is ongoing
+    return; // Om animation håller på, låt inte player göra något
   }
   if (e.key === "Shift" && player.dx < player.speed * 2) {
     player.dx *= 2;
@@ -93,6 +96,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "b" && newPlayer.dx < newPlayer.speed * 2) {
     newPlayer.dx *= 2;
   }
+  //player 1:
   switch (e.key) {
     case "A":
     case "a":
@@ -102,7 +106,6 @@ document.addEventListener("keydown", (e) => {
       break;
     case "D":
     case "d":
-      // console.log("Fastright is first:", player.direction.FastRight);
       if (e.repeat) return;
       player.direction.Right = true;
       spriteAnimation = yOffset;
@@ -128,7 +131,7 @@ document.addEventListener("keydown", (e) => {
       spriteAnimation = 3 * yOffset;
       disableMovement1();
       break;
-    //player 2 movement:
+    //player 2:
     case "J":
     case "j":
       if (e.repeat) return;
@@ -137,7 +140,6 @@ document.addEventListener("keydown", (e) => {
       break;
     case "L":
     case "l":
-      // console.log("Fastright is first:", player.direction.FastRight);
       if (e.repeat) return;
       newPlayer.direction.Right = true;
       newSpriteAnimation = yOffset;
@@ -289,7 +291,7 @@ function enableMovement2() {
   disableMovement2();
 }
 
-// Character sprites:
+// Sprites:
 let spriteSheet1 = new Image();
 spriteSheet1.src = "Images/Samurai-sprite-transparant1.png";
 let widthDivider1 = 6.575;
@@ -333,14 +335,10 @@ const Gravity = 0.5;
 
 // Jumping för min character / spriten
 let jumping = true;
-// let jumpHeight = 150;
-// let jumpVelocity = -10;
 
 let frameIndex = 0.4;
-// let frameindexSword = 0.4;
 const yOffset = spriteSheet1.height / 5.4;
 const totalFrames = 6;
-const totalFramesHealth = 2;
 const scale = 1;
 const blankFrames = [4, 5];
 
@@ -349,22 +347,21 @@ let lastTimestamp = 0,
   timestep = 1000 / maxFPS;
 
 function draw(timestamp) {
-  //if-sats för "throttling". För att det inte ska bli för hög FPS
+  // if sats för att det inte ska bli för hög FPS
   if (timestamp - lastTimestamp < timestep) {
-    // Vi ska vänta med att rita så vi avbryter funktionen.
+    // Väntar på att starta animationen
     requestAnimationFrame(draw);
     return;
   }
-  // OK, dags att rita!
+  // Här ritar man
   lastTimestamp = timestamp;
 
-  c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Tömmer canvasen
+  c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Canvasen tömms här
 
   frameIndex = (frameIndex + 1) % totalFrames;
   // Ritar den frame som är på frameIndex med skalan i scale
 
   // Se till att frameIndex inte blir högre än antalet frames. Börja om på frame 0 i så fall.
-  // frameindexSword = (frameIndex + 1) % totalFramesSword;
   requestAnimationFrame(draw);
 }
 
@@ -397,12 +394,12 @@ function drawPlayer1(
 
   c.drawImage(
     spriteSheet,
-    frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x-koordinat
-    spriteAnimation, // 0, // 0, // Framens y-koordinat är alltid 0
+    frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x koordinat
+    spriteAnimation, // vilken animation som spelaren ska ta på sig
     spriteSheet.width / widthDivider,
     spriteSheet.height / heightDivider,
-    spriteX1, // 0, // Ritar på x-koordinat 0 på canvas
-    spriteY1, // 0, // Ritar på y-koordinat 0 på canvas
+    spriteX1, // Ritar på x-koordinat 0 på canvas
+    spriteY1, // Ritar på y-koordinat 0 på canvas
     (spriteSheet.height / heightDivider) * scale,
     (spriteSheet.width / widthDivider) * scale
   );
@@ -423,18 +420,18 @@ function drawPlayer2(
   let spriteY2 = newPlayer.y;
 
   c.save();
-  c.scale(-1, 1); //här flippar vi enemy sprite horizontally
+  c.scale(-1, 1); //här flippar vi enemy sprite horizontallt
 
   let flippedX = -spriteX2 - (spriteSheet.width / widthDivider) * scale;
 
   c.drawImage(
     newSpriteSheet,
-    frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x-koordinat
-    spriteAnimation, // 0, // 0, // Framens y-koordinat är alltid 0
+    frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x koordinat
+    spriteAnimation, // vilken animation som spelaren ska ta på sig
     spriteSheet.width / widthDivider,
     spriteSheet.height / heightDivider,
-    flippedX, // 0, // Ritar på x-koordinat 0 på canvas
-    spriteY2, // 0, // Ritar på y-koordinat 0 på canvas
+    flippedX, // Ritar på x-koordinat 0 på canvas
+    spriteY2, // Ritar på y-koordinat 0 på canvas
     (spriteSheet.height / heightDivider) * scale,
     (spriteSheet.width / widthDivider) * scale
   );
@@ -494,7 +491,7 @@ function updatePlayerPosition() {
     player.direction.Up &&
     player.y + player.height >= gameCanvas.height - 2
   ) {
-    player.dy -= 10; // Jump height
+    player.dy -= 10; // Jump höjd för player 1
     isJumping = true;
   } else if (
     player.direction.Down &&
@@ -546,7 +543,7 @@ function updatePlayerPosition() {
     newPlayer.direction.Up &&
     newPlayer.y + newPlayer.height >= gameCanvas.height - 2
   ) {
-    newPlayer.dy -= 10; // Jump height
+    newPlayer.dy -= 10; // Jump höjd för player 2
     isJumping = true;
   } else if (
     newPlayer.direction.Down &&
@@ -557,8 +554,8 @@ function updatePlayerPosition() {
 }
 
 function game() {
-  requestAnimationFrame(game); // Run gameloop recursively
-  c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Clear screen
+  requestAnimationFrame(game); // Gör att spelet körs om och om och om och om igen :)
+  c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Rensar skärmen.
 
   drawPlayer1(
     spriteSheet,
@@ -609,22 +606,18 @@ function game() {
   if (newPlayer.hp <= 0) {
     document.getElementById("conditionalText1").classList.remove("hidden");
     document.getElementById("conditionalText1").classList.add("visible");
-    console.log("död");
     toggleAudio();
   } else {
     document.getElementById("conditionalText1").classList.remove("visible");
     document.getElementById("conditionalText1").classList.add("hidden");
-    console.log("lever");
   }
   if (player.hp <= 0) {
     document.getElementById("conditionalText2").classList.remove("hidden");
     document.getElementById("conditionalText2").classList.add("visible");
-    console.log("död");
     toggleAudio();
   } else {
     document.getElementById("conditionalText2").classList.remove("visible");
     document.getElementById("conditionalText2").classList.add("hidden");
-    console.log("lever");
   }
 }
 

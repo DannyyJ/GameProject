@@ -16,21 +16,21 @@ canvas {
 }
 
 #player1Display {
-  font-size: 40px;
-  top: 10px;
-  left: 10px;
+  font-size: 30px;
+  color: white;
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(31, 0, 123, 0.4);
   border-radius: 5px;
+  transform: translate(-50%, -100%);
 }
 
 #player2Display {
-  font-size: 40px;
-  top: 10px;
-  right: 10px;
+  font-size: 30px;
+  color: white;
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(123, 0, 0, 0.4);
   border-radius: 5px;
+  transform: translate(-50%, -100%);
 }
 
 #conditionalTextContainer {
