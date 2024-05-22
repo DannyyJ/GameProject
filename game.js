@@ -581,7 +581,7 @@ function game() {
   newPlayer.dy += Gravity;
 
   if (player.y + player.height >= gameCanvas.height - 2) {
-    isJumping = false; // Player is no longer jumping
+    isJumping = false; // Player hoppar inte igen
   }
   //En liten kollision manick som bestämmer vad som händer när träffar marken
   if (player.y + player.height > gameCanvas.height) {
@@ -603,6 +603,7 @@ function game() {
   displayPlayer1HP();
   displayPlayer2HP();
 
+  //Visar text när någon vinner och gömmer ifall inte
   if (newPlayer.hp <= 0) {
     document.getElementById("conditionalText1").classList.remove("hidden");
     document.getElementById("conditionalText1").classList.add("visible");
@@ -624,5 +625,7 @@ function game() {
 // -------------------------------------
 // ------------ Start game ------------
 
+//Byter bakgrund beroende på Easy, Medium eller Hard
+//Sparar bakgrunden i Storage när den byter Index
 gameCanvas.style.backgroundImage = window.sessionStorage.getItem("background");
 game();
