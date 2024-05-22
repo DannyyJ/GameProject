@@ -12,6 +12,7 @@ window.onload = function () {
   const CHOOSE = document.getElementById("CHOOSE");
   const BACK_BTN = document.getElementById("BACK");
   const P1 = document.getElementById("P1");
+  const P2 = document.getElementById("P2")
 
   START_BTN.addEventListener("click", function (event) {
     event.preventDefault(); // Förhindra standardbeteendet för länkar
@@ -30,6 +31,11 @@ window.onload = function () {
     event.preventDefault(); // Förhindra standardbeteendet för länkar
     CHOOSE.style.display = "none";
     P1.style.display = "block";
+  });
+  document.getElementById("P2").addEventListener("click", function (event) {
+    event.preventDefault(); // Förhindra standardbeteendet för länkar
+    CHOOSE.style.display = "none";
+    P2.style.display = "block";
   });
 };
 const hardbutton = document.getElementById("HARD");
