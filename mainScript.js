@@ -38,6 +38,11 @@ window.onload = function () {
     P2.style.display = "block";
   });
 };
+const mediumbutton = document.getElementById("MEDIUM");
+mediumbutton.addEventListener("click", function () {
+  // Detta så kan du ändar för att testa olika bakgrunder
+  window.sessionStorage.setItem("background", 'url("Images/dojo.balcony.gif")'); 
+});
 const hardbutton = document.getElementById("HARD");
 hardbutton.addEventListener("click", function () {
   window.sessionStorage.setItem("background", 'url("Images/dojo.gif")');
