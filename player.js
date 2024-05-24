@@ -1,5 +1,5 @@
 // Player variables
-class Player {
+export class Player {
   constructor(hp, x, y, dx, dy, speed, radius, width, height) {
     this.hp = hp;
     this.x = x;

@@ -1,3 +1,6 @@
+// Imports från andra js filer:
+import { Player } from "./player.js";
+
 //  ------------ Setup ------------
 window.focus;
 const SCREENWIDTH = innerWidth;
@@ -18,30 +21,6 @@ function toggleAudio() {
     audioElement.play();
   } else {
     audioElement.currentTime = 0;
-  }
-}
-
-// Player variables
-class Player {
-  constructor(hp, x, y, dx, dy, speed, radius, width, height) {
-    this.hp = hp;
-    this.x = x;
-    this.y = y;
-    this.dx = dx;
-    this.dy = dy;
-    this.speed = speed;
-    this.radius = radius;
-    this.width = width;
-    this.height = height;
-    this.direction = {
-      Right: false,
-      FastRight: false,
-      Left: false,
-      FastLeft: false,
-      Up: false,
-      Down: false,
-      Shift: false,
-    };
   }
 }
 
@@ -78,6 +57,7 @@ function displayPlayer2HP() {
 // ------------ Player movement ------------
 let isAnimating = false;
 let newIsAnimating = false;
+let isOnGround = true;
 let isJumping = false;
 let isMoving = false;
 
