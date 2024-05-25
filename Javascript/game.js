@@ -81,34 +81,12 @@ let isMoving = false;
 
 //Alla "new" konstander tillhåller player 2
 
-//Timer för efter anatal tid som player gör damage
-let damageTimeout;
-let playerDamageInterval = null;
-
-function startDamageTimer() {
-  // Start a timeout to deal damage after 500 milliseconds
-  damageTimeout = setTimeout(() => {
-    takeDamage1();
-  }, 500);
-}
-
-function stopDamageTimer() {
-  // Clear the timeout if the "F" key is released before the 500 milliseconds
-  clearTimeout(damageTimeout);
-}
-
-function startDamageInterval(player) {
-  // Start an interval to repeatedly deal damage every 500 milliseconds
-  playerDamageInterval = setInterval(() => {
-    player.hp -= 20; // Deal damage to the player
-    console.log(player.hp);
-  }, 500);
-}
-
-function stopDamageInterval() {
-  // Clear the interval when the "F" key is released
-  clearInterval(playerDamageInterval);
-}
+import {
+  startDamageTimer,
+  stopDamageTimer,
+  startDamageInterval,
+  stopDamageInterval,
+} from "./damage.js";
 
 document.addEventListener("keydown", (e) => {
   if (isAnimating || player.hp <= 0 || newPlayer.hp <= 0) {
