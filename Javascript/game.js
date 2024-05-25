@@ -159,7 +159,6 @@ document.addEventListener("keyup", (e) => {
     newPlayer.dx /= 2;
   }
 
-  console.log(e.key);
   switch (e.key) {
     case "Shift":
       player.direction.Shift = false;
@@ -169,7 +168,7 @@ document.addEventListener("keyup", (e) => {
       player.direction.Left = false;
       spriteAnimation = 0;
       player.dx = player.speed;
-      console.log("shift");
+
       break;
     case "B":
     case "b":
@@ -180,7 +179,7 @@ document.addEventListener("keyup", (e) => {
       newPlayer.direction.Left = false;
       newSpriteAnimation = 0;
       newPlayer.dx = newPlayer.speed;
-      console.log("b");
+
     case "A":
     case "a":
       player.direction.Left = false;
@@ -210,7 +209,6 @@ document.addEventListener("keyup", (e) => {
       break;
     case "J":
     case "j":
-      console.log("hej");
       newPlayer.direction.Left = false;
       newSpriteAnimation = 0;
       break;
@@ -279,10 +277,6 @@ let heightDivider1 = 5.8;
 spriteSheet1.onload = function () {
   let spriteSheet1Width = spriteSheet1.width / 6.575;
   let spriteSheet1Height = spriteSheet1.height / 5.8;
-  console.log("SpriteSheet1 Width: ", spriteSheet1.width);
-  console.log("SpriteSheet1 Height: ", spriteSheet1.height);
-  console.log("Calculated SpriteSheet1 Width: ", spriteSheet1Width);
-  console.log("Calculated SpriteSheet1 Height: ", spriteSheet1Height);
 };
 
 let spriteSheet2 = new Image();
@@ -292,10 +286,6 @@ let heightDivider2 = 5.4;
 spriteSheet2.onload = function () {
   let spriteSheet2Width = spriteSheet2.width / 6.575;
   let spriteSheet2Height = spriteSheet2.height / 5.8;
-  console.log("SpriteSheet2 Width: ", spriteSheet2.width);
-  console.log("SpriteSheet2 Height: ", spriteSheet2.height);
-  console.log("Calculated SpriteSheet2 Width: ", spriteSheet2Width);
-  console.log("Calculated SpriteSheet2 Height: ", spriteSheet2Height);
 };
 
 let redSpriteSheet1 = new Image();
@@ -307,8 +297,6 @@ let redSpriteSheet2 = new Image();
 redSpriteSheet2.src = "Images/Samurai-sprite-transparant2 red.png";
 let redSpriteSheet2Width = redSpriteSheet2.width / 6.575;
 let redSpriteSheet2Height = spriteSheet2.height / 5.8;
-
-console.log(spriteSheet1.height);
 
 // Gravity:
 const Gravity = 0.5;
@@ -340,6 +328,28 @@ function draw(timestamp) {
 
   frameIndex = (frameIndex + 1) % totalFrames;
   // Ritar den frame som är på frameIndex med skalan i scale
+
+  let updatedPositions = updatePlayerPosition(
+    player,
+    newPlayer,
+    spriteSheet,
+    newSpriteSheet,
+    spriteAnimation,
+    newSpriteAnimation,
+    yOffset,
+    gameCanvas,
+    isJumping,
+    isMoving,
+    spriteSheet1,
+    spriteSheet2,
+    redSpriteSheet1,
+    redSpriteSheet2
+  );
+
+  spriteAnimation = updatedPositions.spriteAnimation;
+  newSpriteAnimation = updatedPositions.newSpriteAnimation;
+  spriteSheet = updatedPositions.spriteSheet;
+  newSpriteSheet = updatedPositions.newSpriteSheet;
 
   // Se till att frameIndex inte blir högre än antalet frames. Börja om på frame 0 i så fall.
   requestAnimationFrame(draw);
@@ -428,110 +438,8 @@ function checkCollision(rect1, rect2) {
   );
 }
 
-//Funktion för att player rör sig
-function updatePlayerPosition() {
-  if (player.dx <= player.speed) {
-    spriteSheet = spriteSheet1;
-  }
-
-  if (isJumping) {
-    spriteSheet = spriteSheet2;
-    spriteAnimation = yOffset;
-  }
-  //Player 1
-  if (player.direction.Right && player.dx > player.speed) {
-    spriteAnimation = 2 * yOffset;
-  }
-  if (player.direction.Left && player.dx > player.speed) {
-    spriteSheet = spriteSheet2;
-    spriteAnimation = yOffset;
-  }
-
-  if (
-    player.direction.FastRight &&
-    player.x + player.width < gameCanvas.width
-  ) {
-    player.x += player.dx * 3;
-    isMoving = true;
-  }
-  if (player.direction.Right && player.x + player.width < gameCanvas.width) {
-    player.x += player.dx;
-  }
-  if (player.direction.Left && player.direction.FastLeft && player.x > 0) {
-    player.x -= player.dx * 3;
-    isMoving = true;
-  }
-  if (player.direction.Left && player.x > 0) {
-    player.x -= player.dx;
-  } else {
-    isMoving = false;
-  }
-
-  if (
-    player.direction.Up &&
-    player.y + player.height >= gameCanvas.height - 2
-  ) {
-    player.dy -= 10; // Jump höjd för player 1
-    isJumping = true;
-  } else if (
-    player.direction.Down &&
-    player.y + player.height < gameCanvas.height
-  ) {
-    player.y += player.dy;
-  }
-  //Player 2
-  if (newPlayer.dx <= newPlayer.speed) {
-    newSpriteSheet = redSpriteSheet1;
-  }
-
-  if (newPlayer.direction.Right && newPlayer.dx > player.speed) {
-    newSpriteSheet = redSpriteSheet2;
-    newSpriteAnimation = yOffset;
-  }
-  if (newPlayer.direction.Left && newPlayer.dx > player.speed) {
-    newSpriteAnimation = 2 * yOffset;
-  }
-
-  if (
-    newPlayer.direction.FastRight &&
-    newPlayer.x + newPlayer.width < gameCanvas.width
-  ) {
-    newPlayer.x += newPlayer.dx * 3;
-    isMoving = true;
-  }
-  if (
-    newPlayer.direction.Right &&
-    newPlayer.x + newPlayer.width < gameCanvas.width
-  ) {
-    newPlayer.x += newPlayer.dx;
-  }
-  if (
-    newPlayer.direction.Left &&
-    newPlayer.direction.FastLeft &&
-    newPlayer.x > 0
-  ) {
-    newPlayer.x -= newPlayer.dx * 3;
-    isMoving = true;
-  }
-  if (newPlayer.direction.Left && newPlayer.x > 0) {
-    newPlayer.x -= newPlayer.dx;
-  } else {
-    isMoving = false;
-  }
-
-  if (
-    newPlayer.direction.Up &&
-    newPlayer.y + newPlayer.height >= gameCanvas.height - 2
-  ) {
-    newPlayer.dy -= 10; // Jump höjd för player 2
-    isJumping = true;
-  } else if (
-    newPlayer.direction.Down &&
-    newPlayer.y + newPlayer.height < gameCanvas.height
-  ) {
-    newPlayer.y += newPlayer.dy;
-  }
-}
+// import från updatePlayerPosition.js
+import { updatePlayerPosition } from "./updatePlayerPosition.js";
 
 function game() {
   requestAnimationFrame(game); // Gör att spelet körs om och om och om och om igen :)
@@ -578,7 +486,22 @@ function game() {
     isOnGround = true;
   }
 
-  updatePlayerPosition();
+  updatePlayerPosition(
+    player,
+    newPlayer,
+    spriteSheet,
+    newSpriteSheet,
+    spriteAnimation,
+    newSpriteAnimation,
+    yOffset,
+    gameCanvas,
+    isJumping,
+    isMoving,
+    spriteSheet1,
+    spriteSheet2,
+    redSpriteSheet1,
+    redSpriteSheet2
+  );
 
   displayPlayer1HP();
   displayPlayer2HP();
