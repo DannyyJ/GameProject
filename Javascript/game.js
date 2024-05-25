@@ -11,20 +11,6 @@ let c = gameCanvas.getContext("2d"); // Drawing object
 gameCanvas.height = SCREENHEIGHT;
 gameCanvas.width = SCREENWIDTH;
 // -------------------------------------
-let audioElement = document.getElementById("audioElement");
-
-audioElement.autoplay = true;
-audioElement.volume = 0; // Sätt volymen till 0 för att tyst spela ljudet
-audioElement.pause();
-
-//Funktion för ljud
-function toggleAudio() {
-  if (audioElement.paused) {
-    audioElement.play();
-  } else {
-    audioElement.currentTime = 0;
-  }
-}
 
 //Här hämtar vi difficulty från mainscript.js storage
 let difficulty = window.sessionStorage.getItem("difficulty");
@@ -510,7 +496,6 @@ function game() {
   if (newPlayer.hp <= 0) {
     document.getElementById("conditionalText1").classList.remove("hidden");
     document.getElementById("conditionalText1").classList.add("visible");
-    toggleAudio();
   } else {
     document.getElementById("conditionalText1").classList.remove("visible");
     document.getElementById("conditionalText1").classList.add("hidden");
@@ -518,7 +503,6 @@ function game() {
   if (player.hp <= 0) {
     document.getElementById("conditionalText2").classList.remove("hidden");
     document.getElementById("conditionalText2").classList.add("visible");
-    toggleAudio();
   } else {
     document.getElementById("conditionalText2").classList.remove("visible");
     document.getElementById("conditionalText2").classList.add("hidden");
