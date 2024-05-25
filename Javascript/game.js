@@ -81,6 +81,35 @@ let isMoving = false;
 
 //Alla "new" konstander tillhåller player 2
 
+//Timer för efter anatal tid som player gör damage
+let damageTimeout;
+let playerDamageInterval = null;
+
+function startDamageTimer() {
+  // Start a timeout to deal damage after 500 milliseconds
+  damageTimeout = setTimeout(() => {
+    takeDamage1();
+  }, 500);
+}
+
+function stopDamageTimer() {
+  // Clear the timeout if the "F" key is released before the 500 milliseconds
+  clearTimeout(damageTimeout);
+}
+
+function startDamageInterval(player) {
+  // Start an interval to repeatedly deal damage every 500 milliseconds
+  playerDamageInterval = setInterval(() => {
+    player.hp -= 20; // Deal damage to the player
+    console.log(player.hp);
+  }, 500);
+}
+
+function stopDamageInterval() {
+  // Clear the interval when the "F" key is released
+  clearInterval(playerDamageInterval);
+}
+
 document.addEventListener("keydown", (e) => {
   if (isAnimating || player.hp <= 0 || newPlayer.hp <= 0) {
     return; // Om animation håller på, låt inte player göra något
@@ -121,9 +150,14 @@ document.addEventListener("keydown", (e) => {
       break;
     case "F":
     case "f":
+      // if (checkCollision(player, newPlayer)) {
+      //   // newPlayer.hp -= 20;
+      //   // console.log(newPlayer.hp);
+      // }
       if (checkCollision(player, newPlayer)) {
-        newPlayer.hp -= 20;
-        console.log(newPlayer.hp);
+        // Start the damage interval when "F" key is pressed for player 1
+        startDamageTimer();
+        startDamageInterval(newPlayer); // Start repeating damage for player 1 after initial delay
       }
       isAnimating = true;
       spriteAnimation = 3 * yOffset;
@@ -155,13 +189,14 @@ document.addEventListener("keydown", (e) => {
       break;
     case "H":
     case "h":
-      if (checkCollision(newPlayer, player)) {
-        player.hp -= 20;
-        console.log(player.hp);
-      }
       newIsAnimating = true;
       newSpriteAnimation = 3 * yOffset;
       disableMovement2();
+      if (checkCollision(newPlayer, player)) {
+        // Start the damage interval when "F" key is pressed for player 1
+        startDamageTimer();
+        startDamageInterval(player); // Start repeating damage for player 1 after initial delay
+      }
       break;
     default:
       break;
@@ -224,6 +259,8 @@ document.addEventListener("keyup", (e) => {
       isAnimating = false;
       enableMovement1();
       spriteAnimation = 0;
+      stopDamageTimer();
+      stopDamageInterval();
       break;
     case "J":
     case "j":
@@ -251,6 +288,8 @@ document.addEventListener("keyup", (e) => {
       newIsAnimating = false;
       enableMovement2();
       newSpriteAnimation = 0;
+      stopDamageTimer();
+      stopDamageInterval();
       break;
     default:
       break;
@@ -402,6 +441,7 @@ import { updatePlayerPosition } from "./updatePlayerPosition.js";
 // Här hämtar koden buttonsPlayer 1 och 2 som element av dess id
 var buttonsPlayer1 = document.getElementById("buttonsPlayer1");
 var buttonsPlayer2 = document.getElementById("buttonsPlayer2");
+var refreshInfo = document.getElementById("refreshInfo");
 
 // Fade ut div med movement knapparna med transition på 1 sekund
 function fadeOut() {
@@ -410,8 +450,14 @@ function fadeOut() {
   buttonsPlayer1.style.opacity = 0;
   buttonsPlayer2.style.opacity = 0;
 }
+
+function fadeOutInfo() {
+  refreshInfo.style.transition = "opacity 1s";
+  refreshInfo.style.opacity = 0;
+}
 // Efter 10 sekunder kör funktion fadeOut
 setTimeout(fadeOut, 10000);
+setTimeout(fadeOutInfo, 3000);
 
 function game() {
   requestAnimationFrame(game); // Gör att spelet körs om och om och om och om igen :)

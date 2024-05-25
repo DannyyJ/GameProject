@@ -44,10 +44,23 @@ canvas {
 
 #buttonsPlayer1 {
   left: 10px; /* Adjust the left position as needed */
+  z-index: 3;
 }
 
 #buttonsPlayer2 {
   right: 10px; /* Adjust the left position as needed */
+  z-index: 3;
+}
+
+#refreshInfo {
+  width: 100%;
+  font-size: 20px;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  position: fixed;
+  text-align: center;
+  top: auto;
+  color: rgb(255, 46, 46);
+  z-index: 2;
 }
 
 .movementTitle {
