@@ -428,7 +428,7 @@ function drawPlayer2(
   c.restore();
 }
 
-//Kolla ifall spelare är i spelare
+//Kolla ifall spelare är i andra spelare
 function checkCollision(rect1, rect2) {
   return (
     rect1.x < rect2.x + rect2.width &&
@@ -440,6 +440,20 @@ function checkCollision(rect1, rect2) {
 
 // import från updatePlayerPosition.js
 import { updatePlayerPosition } from "./updatePlayerPosition.js";
+
+// Här hämtar koden buttonsPlayer 1 och 2 som element av dess id
+var buttonsPlayer1 = document.getElementById("buttonsPlayer1");
+var buttonsPlayer2 = document.getElementById("buttonsPlayer2");
+
+// Fade ut div med movement knapparna med transition på 1 sekund
+function fadeOut() {
+  buttonsPlayer1.style.transition = "opacity 1s";
+  buttonsPlayer2.style.transition = "opacity 1s";
+  buttonsPlayer1.style.opacity = 0;
+  buttonsPlayer2.style.opacity = 0;
+}
+// Efter 10 sekunder kör funktion fadeOut
+setTimeout(fadeOut, 10000);
 
 function game() {
   requestAnimationFrame(game); // Gör att spelet körs om och om och om och om igen :)

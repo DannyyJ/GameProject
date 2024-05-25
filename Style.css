@@ -33,6 +33,28 @@ canvas {
   transform: translate(-50%, -100%);
 }
 
+.buttonsPlayer {
+  position: fixed;
+  top: 10px; /* Adjust the top position as needed */
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+  color: white; /* Text color */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#buttonsPlayer1 {
+  left: 10px; /* Adjust the left position as needed */
+}
+
+#buttonsPlayer2 {
+  right: 10px; /* Adjust the left position as needed */
+}
+
+.movementTitle {
+  margin: 0 0 5px;
+  font-size: 30px;
+}
+
 #conditionalTextContainer {
   position: absolute;
   top: 50%;
