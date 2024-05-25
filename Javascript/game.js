@@ -1,5 +1,6 @@
 // Imports från andra js filer:
 import { Player } from "./player.js";
+import { drawPlayer1, drawPlayer2 } from "./animation.js";
 
 //  ------------ Setup ------------
 window.focus;
@@ -16,6 +17,7 @@ audioElement.autoplay = true;
 audioElement.volume = 0; // Sätt volymen till 0 för att tyst spela ljudet
 audioElement.pause();
 
+//Funktion för ljud
 function toggleAudio() {
   if (audioElement.paused) {
     audioElement.play();
@@ -24,11 +26,27 @@ function toggleAudio() {
   }
 }
 
+//Här hämtar vi difficulty från mainscript.js storage
+let difficulty = window.sessionStorage.getItem("difficulty");
+let initialHP;
+
+//Vi tar hp för vilken difficulty
+switch (difficulty) {
+  case "medium":
+    initialHP = 200;
+    break;
+  case "hard":
+    initialHP = 350;
+    break;
+  default:
+    initialHP = 100; // Default to easy if not set
+}
+
 // Så här fungerar detta:
 //Player(liv, vart spelaren är horizontellt, vertikalt, hastigheten horizontellt, vertikalt, speed variabel,
 // radius på spriten, bredden, höjden)
-let player = new Player(100, 200, 200, 3, 3, 3, 20, 30, 200);
-let newPlayer = new Player(100, 900, 200, 3, 3, 3, 20, 30, 200);
+let player = new Player(initialHP, 200, 200, 3, 3, 3, 20, 30, 200);
+let newPlayer = new Player(initialHP, 900, 200, 3, 3, 3, 20, 30, 200);
 
 //Hp för player 1
 function displayPlayer1HP() {
@@ -64,10 +82,10 @@ let isMoving = false;
 //Alla "new" konstander tillhåller player 2
 
 document.addEventListener("keydown", (e) => {
-  if (isAnimating) {
+  if (isAnimating || player.hp <= 0 || newPlayer.hp <= 0) {
     return; // Om animation håller på, låt inte player göra något
   }
-  if (newIsAnimating) {
+  if (newIsAnimating || player.hp <= 0 || newPlayer.hp <= 0) {
     return; // Om animation håller på, låt inte player göra något
   }
   if (e.key === "Shift" && player.dx < player.speed * 2) {
@@ -269,7 +287,7 @@ function enableMovement2() {
   disableMovement2();
 }
 
-// Sprites:
+// // Sprites:
 let spriteSheet1 = new Image();
 spriteSheet1.src = "Images/Samurai-sprite-transparant1.png";
 let widthDivider1 = 6.575;
@@ -307,8 +325,8 @@ let jumping = true;
 let frameIndex = 0.4;
 const yOffset = spriteSheet1.height / 5.4;
 const totalFrames = 6;
-const scale = 1;
-const blankFrames = [4, 5];
+// const scale = 1;
+// const blankFrames = [4, 5];
 
 let lastTimestamp = 0,
   maxFPS = 15,
@@ -368,66 +386,6 @@ let spriteSheet = spriteSheet1;
 
 let newSpriteSheet = redSpriteSheet1;
 
-function drawPlayer1(
-  spriteSheet,
-  heightDivider,
-  widthDivider,
-  frameIndex,
-  spriteAnimation
-) {
-  do {
-    frameIndex = (frameIndex + 1) % totalFrames;
-  } while (blankFrames.includes(Math.floor(frameIndex)));
-
-  let spriteX1 = player.x;
-  let spriteY1 = player.y;
-
-  c.drawImage(
-    spriteSheet,
-    frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x koordinat
-    spriteAnimation, // vilken animation som spelaren ska ta på sig
-    spriteSheet.width / widthDivider,
-    spriteSheet.height / heightDivider,
-    spriteX1, // Ritar på x-koordinat 0 på canvas
-    spriteY1, // Ritar på y-koordinat 0 på canvas
-    (spriteSheet.height / heightDivider) * scale,
-    (spriteSheet.width / widthDivider) * scale
-  );
-}
-
-function drawPlayer2(
-  newSpriteSheet,
-  heightDivider,
-  widthDivider,
-  frameIndex,
-  spriteAnimation
-) {
-  do {
-    frameIndex = (frameIndex + 1) % totalFrames;
-  } while (blankFrames.includes(Math.floor(frameIndex)));
-
-  let spriteX2 = newPlayer.x;
-  let spriteY2 = newPlayer.y;
-
-  c.save();
-  c.scale(-1, 1); //här flippar vi enemy sprite horizontallt
-
-  let flippedX = -spriteX2 - (spriteSheet.width / widthDivider) * scale;
-
-  c.drawImage(
-    newSpriteSheet,
-    frameIndex * (spriteSheet.width / widthDivider), // Beräknar framens x koordinat
-    spriteAnimation, // vilken animation som spelaren ska ta på sig
-    spriteSheet.width / widthDivider,
-    spriteSheet.height / heightDivider,
-    flippedX, // Ritar på x-koordinat 0 på canvas
-    spriteY2, // Ritar på y-koordinat 0 på canvas
-    (spriteSheet.height / heightDivider) * scale,
-    (spriteSheet.width / widthDivider) * scale
-  );
-  c.restore();
-}
-
 //Kolla ifall spelare är i andra spelare
 function checkCollision(rect1, rect2) {
   return (
@@ -460,6 +418,8 @@ function game() {
   c.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Rensar skärmen.
 
   drawPlayer1(
+    c,
+    player,
     spriteSheet,
     heightDivider1,
     widthDivider1,
@@ -468,6 +428,8 @@ function game() {
   );
 
   drawPlayer2(
+    c,
+    newPlayer,
     newSpriteSheet,
     heightDivider1,
     widthDivider1,

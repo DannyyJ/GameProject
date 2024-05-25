@@ -4,7 +4,7 @@ const SCREENHEIGHT = innerHeight;
 let mainCanvas = document.getElementById("mainCanvas");
 mainCanvas.height = SCREENHEIGHT;
 mainCanvas.width = SCREENWIDTH;
-window.sessionStorage.clear()
+window.sessionStorage.clear();
 let gameCanvas = document.getElementById("gameCanvas");
 
 window.onload = function () {
@@ -12,7 +12,7 @@ window.onload = function () {
   const CHOOSE = document.getElementById("CHOOSE");
   const BACK_BTN = document.getElementById("BACK");
   const P1 = document.getElementById("P1");
-  const P2 = document.getElementById("P2")
+  const P2 = document.getElementById("P2");
 
   START_BTN.addEventListener("click", function (event) {
     event.preventDefault(); // Förhindra standardbeteendet för länkar
@@ -41,9 +41,11 @@ window.onload = function () {
 const mediumbutton = document.getElementById("MEDIUM");
 mediumbutton.addEventListener("click", function () {
   // Detta så kan du ändar för att testa olika bakgrunder
-  window.sessionStorage.setItem("background", 'url("Images/dojo.balcony.gif")'); 
+  window.sessionStorage.setItem("difficulty", "medium");
+  window.sessionStorage.setItem("background", 'url("Images/dojo.gif")');
 });
 const hardbutton = document.getElementById("HARD");
 hardbutton.addEventListener("click", function () {
-  window.sessionStorage.setItem("background", 'url("Images/dojo.gif")');
+  window.sessionStorage.setItem("difficulty", "hard");
+  window.sessionStorage.setItem("background", 'url("Images/dojo.balcony.gif")');
 });
